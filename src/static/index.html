@@ -46,5 +46,46 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      // Adiciona a renderização dos participantes em cada card de atividade
+      document.addEventListener('DOMContentLoaded', async () => {
+        const activitiesList = document.getElementById('activities-list');
+        const activitySelect = document.getElementById('activity');
+        try {
+          const res = await fetch('/activities');
+          const activities = await res.json();
+          activitiesList.innerHTML = '';
+          activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+          Object.entries(activities).forEach(([name, data]) => {
+            // Cria o card da atividade
+            const card = document.createElement('div');
+            card.className = 'activity-card';
+            card.innerHTML = `
+              <h4>${name}</h4>
+              <p><strong>Description:</strong> ${data.description}</p>
+              <p><strong>Schedule:</strong> ${data.schedule}</p>
+              <p><strong>Max Participants:</strong> ${data.max_participants}</p>
+              <div class="participants-section">
+                <strong>Participants:</strong>
+                ${
+                  data.participants.length > 0
+                    ? `<ul class="participants-list">${data.participants.map(email => `<li>${email}</li>`).join('')}</ul>`
+                    : '<span class="no-participants">No participants yet.</span>'
+                }
+              </div>
+            `;
+            activitiesList.appendChild(card);
+
+            // Adiciona opção ao select
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            activitySelect.appendChild(option);
+          });
+        } catch (e) {
+          activitiesList.innerHTML = '<p class="error">Failed to load activities.</p>';
+        }
+      });
+    </script>
   </body>
 </html>
