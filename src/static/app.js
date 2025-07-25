@@ -10,8 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
-      activitiesList.innerHTML = "";
+       // Clear loading message
+       activitiesList.innerHTML = "";
+       activitySelect.innerHTML = ""; // <-- Adicione esta linha para limpar as opções
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
